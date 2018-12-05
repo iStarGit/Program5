@@ -1,0 +1,65 @@
+; ISR.asm
+; Name:
+; UTEid: 
+; Keyboard ISR runs when a key is struck
+; Checks for a valid RNA symbol and places it at x4600
+	.ORIG x2600
+LOOP	
+	ST R1, ISRR1
+	ST R2, ISRR2
+	ST R3, ISRR3
+
+	LDI R1, KBSR
+	LD R2, KREADY
+	NOT R2, R2
+	ADD R2, R2, #1
+	ADD R0, R1, R2
+	BRnp LOOP
+	LDI R1, KBDR
+	LD R2, charA
+	ADD R3, R1, R2
+	BRz A
+	LD R2, charC
+	ADD R3, R1, R2
+	BRz C
+	LD R2, charG
+	ADD R3, R1, R2
+	BRz G
+	LD R2, charU
+	ADD R3, R1, R2
+	BRz U
+	BR END
+A
+	STI R1, SYMBOL
+C
+
+	STI R1, SYMBOL
+G
+
+	STI R1, SYMBOL
+U
+
+	STI R1, SYMBOL
+	
+END 	ADD R0, R1, 0
+	LD R1, DREADY
+	STI R1, KBSR 
+	LD R1, ISRR1
+	LD R2, ISRR2
+	LD R3, ISRR3
+	RTI		
+charA	.FILL x-41
+charC	.FILL x-43
+charG	.FILL x-47
+charU	.FILL x-55
+KBSR	.FILL xFE00
+KBDR	.FILL xFE02
+DSR	.FILL xFE04
+DDR	.FILL xFE06
+SYMBOL	.FILL X4600	
+KREADY	.FILL XC000
+DREADY	.FILL X4000
+ISRR1	.blkw 1
+ISRR2	.blkw 1
+ISRR3	.blkw 1
+	.END
