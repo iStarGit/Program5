@@ -86,6 +86,30 @@ enter	STI R3, InLoc
 	BR loop
 
 checkEnd
+
+	LD R4, A
+	ADD R4, R0, R4
+	BRz Eif_A
+	
+	LD R4, U
+	ADD R4, R0, R4
+	BRz Eif_U
+
+	LD R4, C
+	ADD R4, R0, R4
+	BRz Eif_C
+
+	LD R4, G
+	ADD R4, R0, R4
+	BRz Eif_G
+
+Eif_A
+.blkw 1
+Eif_U
+.blkw 1
+Eif_C
+.blkw 1
+Eif_G
 .blkw 1
 
 
