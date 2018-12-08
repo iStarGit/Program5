@@ -29,8 +29,65 @@
 ;If not zero, then new input, output letter 
 	TRAP x21
 	
-	STI R3, InLoc
+	LD R4, started
+	BRnp checkEnd
+
+	LD R4, A
+	ADD R4, R0, R4
+	BRz if_A
+	
+	LD R4, U
+	ADD R4, R0, R4
+	BRz if_U
+
+	LD R4, C
+	ADD R4, R0, R4
+	BRz if_C
+
+	LD R4, G
+	ADD R4, R0, R4
+	BRz if_G
+
+if_A
+	ST R0, sCodonA
+	BR enter
+if_U
+	LD R4, sCodonA
+	BRz enter
+	LD R4, sCodonU
+	BRz store
+	ST R3, sCodonA
+	ST R3, sCodonU
+	BR enter
+	store ST R0, sCodonU
+	BR enter
+
+if_C
+	ST R3, sCodonA
+	ST R3, sCodonU
+	BR enter
+
+if_G
+	LD R4, sCodonA
+	BRz enter
+	LD R4, sCodonU
+	BRnp start
+	ST R3, sCodonA
+	BR enter
+
+
+start 
+	LEA R0, codStr
+	TRAP x22
+	ADD R4, R3, #1
+	ST R4 started
+
+enter	STI R3, InLoc
 	BR loop
+
+checkEnd
+.blkw 1
+
 
 
 ;If_U, check if 2nd end codon is not zero, therefore you know to reset that bit.
@@ -38,6 +95,15 @@
 
 ;Check if it is an A 
 	
+	
+sCodonA	.blkw 1
+sCodonU .blkw 1
+sCodonG	.blkw 1
+
+
+started	.blkw 1
+check	.blkw 1
+
 
 IVT	.FILL x180
 ISR	.FILL x2600
