@@ -103,6 +103,7 @@ checkEnd
 	ADD R4, R0, R4
 	BRz Eif_G
 
+
 Eif_A
 	LD R4, eCodon1
 	BRz enter
@@ -112,6 +113,7 @@ Eif_A
 	BR enter
 Eif_U
 	LD R4, eCodon2
+	BRnp clearE2
 	ST R0, eCodon1
 	BR enter 
  	
@@ -124,10 +126,25 @@ Eif_C
 Eif_G
 	LD R4, eCodon1
 	BRz enter
+
+	LD R4, eCodon2
+	BRnp checkE2
 	ST R0, eCodon2
 	BR enter
 
+checkE2
+	LD R4, G
+	LD R5, eCodon2
+	ADD R4, R5, R4
+	BRnp comp
+	ST R3, eCodon1
+	ST R3, eCodon2
+	BR enter	
 
+
+clearE2 
+	ST R3, eCodon2
+	BR enter
 
 comp	STI R3, InLoc
 	ST R3, started
