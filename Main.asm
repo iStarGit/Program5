@@ -104,14 +104,38 @@ checkEnd
 	BRz Eif_G
 
 Eif_A
-.blkw 1
+	LD R4, eCodon1
+	BRz enter
+	LD R4, eCodon2	
+	BRnp comp
+	ST R0, eCodon2
+	BR enter
 Eif_U
-.blkw 1
-Eif_C
-.blkw 1
-Eif_G
-.blkw 1
+	LD R4, eCodon2
+	ST R0, eCodon1
+	BR enter 
+ 	
 
+Eif_C
+	ST R3, eCodon1
+	ST R3, eCodon2
+	BR enter
+
+Eif_G
+	LD R4, eCodon1
+	BRz enter
+	ST R0, eCodon2
+	BR enter
+
+
+
+comp	STI R3, InLoc
+	ST R3, started
+	ST R3, sCodonA
+	ST R3, sCodonU
+	ST R3, eCodon1
+	ST R3, eCodon2
+	TRAP x25
 
 
 ;If_U, check if 2nd end codon is not zero, therefore you know to reset that bit.
