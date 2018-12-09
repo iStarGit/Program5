@@ -1,6 +1,6 @@
 ; Main.asm
 ; Name:
-; UTEid: 
+; UTEid:
 ; Continuously reads from x4600 making sure its not reading duplicate
 ; symbols. Processes the symbol based on the program description
 ; of mRNA processing.
@@ -26,16 +26,16 @@
 
 	loop LDI R0, InLoc
 	BRz loop
-;If not zero, then new input, output letter 
+;If not zero, then new input, output letter
 	TRAP x21
-	
-	LD R4, started
-	BRnp checkEnd
+
+	LD R4, started ;Started will be used to check if the AUG sequence is detected
+	BRnp checkEnd  ;if so, then begin searching for one of the three end sequence
 
 	LD R4, A
 	ADD R4, R0, R4
 	BRz if_A
-	
+
 	LD R4, U
 	ADD R4, R0, R4
 	BRz if_U
@@ -76,7 +76,7 @@ if_G
 	BR enter
 
 
-start 
+start
 	LEA R0, codStr
 	TRAP x22
 	ADD R4, R3, #1
@@ -90,7 +90,7 @@ checkEnd
 	LD R4, A
 	ADD R4, R0, R4
 	BRz Eif_A
-	
+
 	LD R4, U
 	ADD R4, R0, R4
 	BRz Eif_U
@@ -107,7 +107,7 @@ checkEnd
 Eif_A
 	LD R4, eCodon1
 	BRz enter
-	LD R4, eCodon2	
+	LD R4, eCodon2
 	BRnp comp
 	ST R0, eCodon2
 	BR enter
@@ -115,8 +115,8 @@ Eif_U
 	LD R4, eCodon2
 	BRnp clearE2
 	ST R0, eCodon1
-	BR enter 
- 	
+	BR enter
+
 
 Eif_C
 	ST R3, eCodon1
@@ -132,21 +132,21 @@ Eif_G
 	ST R0, eCodon2
 	BR enter
 
-checkE2
+checkE2 ;This is to detect whether the inputted G is a 2nd or 3rd bit input.
 	LD R4, G
 	LD R5, eCodon2
 	ADD R4, R5, R4
 	BRnp comp
 	ST R3, eCodon1
 	ST R3, eCodon2
-	BR enter	
+	BR enter
 
 
-clearE2 
+clearE2
 	ST R3, eCodon2
 	BR enter
 
-comp	STI R3, InLoc
+comp	STI R3, InLoc ;When completed, reset everything. 
 	ST R3, started
 	ST R3, sCodonA
 	ST R3, sCodonU
@@ -158,9 +158,9 @@ comp	STI R3, InLoc
 ;If_U, check if 2nd end codon is not zero, therefore you know to reset that bit.
 
 
-;Check if it is an A 
-	
-	
+;Check if it is an A
+
+
 sCodonA	.blkw 1
 sCodonU .blkw 1
 sCodonG	.blkw 1
