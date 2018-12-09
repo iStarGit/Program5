@@ -166,6 +166,11 @@ sCodonU .blkw 1
 sCodonG	.blkw 1
 
 
+
+eCodon1 .blkw 1
+eCodon2 .blkw 1
+eCodon3 .blkw 1
+
 started	.blkw 1
 check	.blkw 1
 
