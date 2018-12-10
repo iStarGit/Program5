@@ -51,7 +51,7 @@
 if_A
 	ST R0, sCodonA
 	BR enter
-if_U
+if_U ;Determine whether U is a 2nd bit or 3rd bit, if 3rd bit, then reset. 
 	LD R4, sCodonA
 	BRz enter
 	LD R4, sCodonU
@@ -67,7 +67,7 @@ if_C
 	ST R3, sCodonU
 	BR enter
 
-if_G
+if_G 
 	LD R4, sCodonA
 	BRz enter
 	LD R4, sCodonU
@@ -76,13 +76,13 @@ if_G
 	BR enter
 
 
-start
+start 
 	LEA R0, codStr
 	TRAP x22
 	ADD R4, R3, #1
 	ST R4 started
 
-enter	STI R3, InLoc
+enter	STI R3, InLoc ;New loop after started
 	BR loop
 
 checkEnd
