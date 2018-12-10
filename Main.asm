@@ -22,7 +22,7 @@
 
 ; start of actual program
 	AND R3, R3, 0
-	LDI R3, InLoc
+	STI R3, InLoc
 
 	loop LDI R0, InLoc
 	BRz loop
